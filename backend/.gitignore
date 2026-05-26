@@ -1,0 +1,5 @@
+backend/server
+
+# Go build cache
+.gocache/
+*.gocache

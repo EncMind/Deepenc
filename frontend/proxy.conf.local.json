@@ -1,0 +1,12 @@
+{
+  "/api/*": {
+    "target": "http://172.200.99.119:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "headers": {
+      "Connection": "keep-alive",
+      "Host": "172.200.99.119:8080"
+    }
+  }
+}

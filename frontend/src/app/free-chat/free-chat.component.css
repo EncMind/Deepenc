@@ -1,0 +1,205 @@
+/* Free chat specific extensions layered on top of the shared app.component.css */
+
+.free-chat-container {
+  min-height: 100vh;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  color: var(--color-text);
+}
+
+
+.free-chat-container .main-content {
+  height: auto;
+  min-height: 100vh;
+  overflow: visible;
+  padding-bottom: 24px;
+  width: 100%;
+  align-items: stretch;
+}
+
+.free-chat-container .chat-interface {
+  width: 100%;
+  margin-bottom: 8px;
+  align-items: stretch;
+}
+
+.free-chat-container .chat-box {
+  height: 440px;
+  min-height: 440px;
+  display: flex;
+  flex-direction: column;
+}
+
+.free-chat-container .messages {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.free-chat-container .input-container {
+  margin-top: 8px;
+  position: relative;
+}
+
+.free-chat-container .input-container textarea {
+  pointer-events: auto;
+}
+
+.usage-banner {
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(251, 191, 36, 0.45);
+  border-radius: 18px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: var(--page-max);
+  box-shadow:
+    0 22px 38px rgba(124, 58, 237, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+}
+
+.usage-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.usage-text {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.upgrade-link {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #fff;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 16px 28px rgba(245, 158, 11, 0.25);
+}
+
+.upgrade-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 36px rgba(245, 158, 11, 0.3);
+}
+
+.usage-counter {
+  margin: 6px auto;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  text-align: center;
+  width: fit-content;
+}
+
+.offline-warning {
+  margin: 6px auto 18px;
+  padding: 8px 16px;
+  border-radius: 12px;
+  background: rgba(249, 115, 22, 0.12);
+  color: #b45309;
+  font-size: 0.85rem;
+  border: 1px solid rgba(249, 115, 22, 0.3);
+  text-align: center;
+  max-width: 600px;
+}
+
+.limit-reached {
+  padding: 2rem;
+  text-align: center;
+  background: rgba(254, 242, 242, 0.9);
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  border-radius: 20px;
+  margin: 1rem 0;
+  box-shadow:
+    0 20px 35px rgba(185, 28, 28, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.limit-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.limit-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.upgrade-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.4rem;
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.92), rgba(67, 56, 202, 0.92));
+  color: #fff;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: 0 18px 28px rgba(79, 70, 229, 0.28);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.upgrade-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 36px rgba(79, 70, 229, 0.32);
+}
+
+.security-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 8px auto 24px;
+  padding: 8px 16px;
+  background: rgba(79, 70, 229, 0.12);
+  border-radius: 16px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08);
+  max-width: 600px;
+  width: 100%;
+}
+
+.security-note p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-primary-dark);
+}
+
+.chat-model-select[disabled] {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--color-text);
+  cursor: default;
+}
+
+.chat-model-select[disabled]:hover {
+  border-color: rgba(148, 163, 184, 0.4);
+}
+
+@media (max-width: 768px) {
+  .free-chat-container .chat-box {
+    height: 300px;
+    min-height: 300px;
+  }
+
+  .free-chat-container .messages {
+    min-height: 0;
+  }
+
+  .usage-content {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .limit-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

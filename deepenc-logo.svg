@@ -1,0 +1,86 @@
+<svg width="800" height="160" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 160">
+  <defs>
+    <radialGradient id="markGlow" cx="80" cy="80" r="70" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3e63b8" />
+      <stop offset="0.5" stop-color="#5c88d6" />
+      <stop offset="1" stop-color="#71c8d7" />
+    </radialGradient>
+    <linearGradient id="shieldFill" x1="12" y1="8" x2="24" y2="28" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f8fbff" />
+      <stop offset="1" stop-color="#d6e3ff" />
+    </linearGradient>
+    <linearGradient id="shieldStroke" x1="11" y1="7" x2="25" y2="29" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#94b8ff" stop-opacity="0.82" />
+      <stop offset="1" stop-color="#4f88d6" stop-opacity="0.42" />
+    </linearGradient>
+    <linearGradient id="aiText" x1="14" y1="12" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6274f0" />
+      <stop offset="0.45" stop-color="#7793f6" />
+      <stop offset="1" stop-color="#6ec7f4" />
+    </linearGradient>
+    <linearGradient id="logoNameGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4338ca" />
+      <stop offset="45%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#0ea5e9" />
+    </linearGradient>
+    <linearGradient id="circleBackground" x1="0%" y1="16%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4a59e6" />
+      <stop offset="40%" stop-color="#5d73f1" />
+      <stop offset="100%" stop-color="#73a2ff" />
+    </linearGradient>
+    <radialGradient id="circleHighlight" cx="50%" cy="16%" r="135%" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="rgba(255, 255, 255, 0.33)" />
+      <stop offset="58%" stop-color="rgba(255, 255, 255, 0)" />
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="160" fill="white"/>
+
+  <!-- Logo Mark (Circle with Shield) -->
+  <g transform="translate(80, 80)">
+    <!-- Circle background with gradient and shadow -->
+    <circle cx="0" cy="0" r="68" fill="url(#circleBackground)"/>
+    <circle cx="0" cy="0" r="68" fill="url(#circleHighlight)"/>
+
+    <!-- Shield with AI text -->
+    <g transform="scale(3.6) translate(0, -1)">
+      <path
+        d="M0 -13.8L9 -10.7V-4.5C9 1 5.3 6.4 0 8.9C-5.3 6.4 -9 1 -9 -4.5V-10.7L0 -13.8Z"
+        fill="url(#shieldFill)"
+        stroke="url(#shieldStroke)"
+        stroke-width="1.1"
+      />
+      <text
+        x="0"
+        y="-0.5"
+        text-anchor="middle"
+        font-family="'Inter', 'Helvetica Neue', Arial, sans-serif"
+        font-size="10.5"
+        font-weight="800"
+        letter-spacing="0.08em"
+        fill="url(#aiText)"
+        stroke="#050a1a"
+        stroke-opacity="0.45"
+        stroke-width="0.32"
+        paint-order="stroke"
+      >AI</text>
+    </g>
+  </g>
+
+  <!-- Deepenc Text -->
+  <text x="180" y="95"
+        font-family="'Inter', 'Helvetica Neue', Arial, sans-serif"
+        font-size="64"
+        font-weight="700"
+        letter-spacing="-1.3"
+        fill="url(#logoNameGradient)">Deepenc</text>
+
+  <!-- Tagline -->
+  <text x="180" y="125"
+        font-family="'Inter', 'Helvetica Neue', Arial, sans-serif"
+        font-size="14"
+        font-weight="600"
+        letter-spacing="2"
+        fill="#475569">PRIVATE MULTI-MODEL AI STUDIO</text>
+</svg>

@@ -1,0 +1,8 @@
+{
+  "provider": "openai",
+  "model": "gpt-4o-mini",
+  "content": "Sure! Here are functions in both JavaScript and Python to reverse a string.\n\n### JavaScript Function\n\n```javascript\nfunction reverseString(str) {\n    return str.split('').reverse().join('');\n}\n\n// Example usage:\nconst originalString = \"Hello, World!\";\nconst reversedString = reverseString(originalString);\nconsole.log(reversedString); // Output: \"!dlroW ,olleH\"\n```\n\n### Python Function\n\n```python\ndef reverse_string(s):\n    return s[::-1]\n\n# Example usage:\noriginal_string = \"Hello, World!\"\nreversed_string = reverse_string(original_string)\nprint(reversed_string)  # Output: \"!dlroW ,olleH\"\n```\n\nIn both examples, the functions take a string as input and return the reversed version of that string.",
+  "expectedCodeBlocks": 2,
+  "expectedLanguages": ["javascript", "python"],
+  "description": "ChatGPT response with JavaScript and Python string reversal functions"
+}

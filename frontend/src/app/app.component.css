@@ -1,0 +1,1207 @@
+/* ============================================
+   ROOT VARIABLES & PAGE STRUCTURE
+   ============================================ */
+
+:root {
+    --page-max: 1400px;
+    --header-height: 40px; /* Minimal header for status only */
+    --input-height: 80px;   /* Reduced input area */
+    --gap-size: 15px;       /* Consistent gaps */
+    --color-primary: #4f46e5;
+    --color-primary-dark: #312e81;
+    --color-accent: #14b8a6;
+    --color-surface: rgba(255, 255, 255, 0.82);
+    --color-surface-strong: rgba(255, 255, 255, 0.92);
+    --color-border: rgba(148, 163, 184, 0.35);
+    --color-border-strong: rgba(79, 70, 229, 0.35);
+    --color-text: #0f172a;
+    --color-muted: #64748b;
+    --color-shadow: rgba(15, 23, 42, 0.12);
+}
+
+.main-content {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 15px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    /* Simplify background to eliminate large translucent layers causing flicker */
+    background: #f8fafc;
+    overflow: hidden; /* No scrolling on desktop */
+    transition: margin-left 0.3s ease;
+    color: var(--color-text);
+}
+
+.main-content.with-history {
+    margin-left: 280px;
+}
+
+/* Allow scrolling on mobile */
+@media (max-width: 768px) {
+    .main-content {
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    
+    .main-content.with-history {
+        margin-left: 0; /* No left margin on mobile */
+    }
+}
+
+/* ============================================
+   HEADER & BRANDING (No longer needed - title moved to navigation)
+   ============================================ */
+
+/* Title and tagline styles removed - now handled by navigation bar */
+
+/* ============================================
+   UTILITIES
+   ============================================ */
+
+/* Accessibility */
+.sr-only {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Status Display (Compact) */
+.status {
+    margin: 4px 0 8px; /* Reduced margins */
+    padding: 6px 10px; /* Reduced padding */
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    color: var(--color-primary-dark);
+    box-shadow:
+      0 20px 35px rgba(15, 23, 42, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    /* Remove blur to avoid GPU issues */
+    font-size: 0.85rem; /* Smaller text */
+}
+
+/* ============================================
+   CHAT CONTROLS (Compact)
+   ============================================ */
+
+.chat-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    max-width: var(--page-max);
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px 15px;
+}
+
+.chat-control-button {
+    padding: 8px 16px; /* Much smaller padding */
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.9), rgba(67, 56, 202, 0.9));
+    color: #fff;
+    border: 1px solid rgba(79, 70, 229, 0.35);
+    border-radius: 999px; /* Slightly less rounded */
+    font-size: 13px; /* Smaller font */
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 18px 28px rgba(79, 70, 229, 0.28);
+    white-space: nowrap;
+}
+
+.chat-control-button:hover {
+    transform: translateY(-2px); /* Subtler hover effect */
+    box-shadow: 0 24px 36px rgba(79, 70, 229, 0.32);
+}
+
+/* Chat toggle buttons styles moved to header - these classes no longer needed */
+
+/* ============================================
+   CHAT INTERFACE GRID (Maximized)
+   ============================================ */
+
+.chat-interface {
+    flex: 1 1 auto; /* Take maximum available space */
+    min-height: 0;
+    width: 100%;
+    max-width: var(--page-max);
+    display: grid; /* Default to grid layout for desktop */
+    gap: 15px; /* Consistent gap */
+    grid-template-columns: 1fr 1fr 1fr; /* Default horizontal layout */
+    grid-template-rows: 1fr; /* Full height row */
+    margin-bottom: 10px; /* Reduced margin */
+}
+
+/* Mobile layout - stack vertically on smaller screens */
+@media (max-width: 768px) {
+    .chat-interface {
+        display: flex;
+        flex-direction: column;
+        flex: none; /* Don't stretch to fill height on mobile */
+    }
+}
+
+/* Override the dynamic classes for desktop */
+@media (min-width: 769px) {
+    .chat-interface.dual-chat {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .chat-interface.single-chat {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================
+   CHAT BOX STRUCTURE (Optimized)
+   ============================================ */
+
+.chat-box {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%; /* Fill available space on desktop */
+    overflow: hidden;
+    min-width: 0;
+    border-radius: 16px; /* Slightly less rounded */
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-strong);
+    box-shadow:
+      0 32px 45px var(--color-shadow),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    /* Remove backdrop blur to prevent GPU artifacts and white fog overlay */
+}
+
+/* Fixed height for mobile layout */
+@media (max-width: 768px) {
+    .chat-box {
+        height: 400px; /* Fixed height on mobile */
+        min-height: 400px;
+        flex: 0 0 auto;
+    }
+}
+
+/* Close Button (Smaller) */
+.chat-box .close-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px; /* Reduced from 32px */
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    background: rgba(255, 255, 255, 0.85);
+    color: var(--color-muted);
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+    z-index: 2;
+}
+
+.chat-box .close-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 18px rgba(15, 23, 42, 0.1);
+    color: var(--color-primary-dark);
+}
+
+.chat-box .close-button:active {
+    transform: scale(0.96);
+}
+
+/* Chat Header (Compact) */
+.chat-header {
+    flex: 0 0 auto;
+    padding: 12px 16px; /* Reduced padding */
+    border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.12), rgba(20, 184, 166, 0.08));
+    border-radius: 16px 16px 0 0;
+}
+
+.chat-title-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chat-logo {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    border-radius: 6px;
+    box-shadow: 0 6px 12px rgba(15, 23, 42, 0.12);
+}
+
+.message-logo {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-right: 6px;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+}
+
+.chat-title {
+    font-weight: 700;
+    color: var(--color-primary-dark);
+    font-size: 1rem; /* Slightly smaller */
+    letter-spacing: -0.01em;
+}
+
+/* Model Selector (Compact) */
+.chat-model-row {
+    flex: 0 0 auto;
+    padding: 10px 14px; /* Reduced padding */
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+    background: rgba(255, 255, 255, 0.65);
+}
+
+.chat-model-select {
+    width: 100%;
+    min-height: 32px; /* Reduced from 36px */
+    padding: 5px 8px; /* Reduced padding */
+    border: 1px solid rgba(148, 163, 184, 0.4);
+    border-radius: 12px;
+    font-size: 13px; /* Smaller font */
+    background: rgba(255, 255, 255, 0.85);
+    color: var(--color-text);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.chat-model-select:hover {
+    border-color: rgba(79, 70, 229, 0.35);
+}
+
+.chat-model-select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.12);
+    outline: none;
+}
+
+/* ============================================
+   MESSAGES AREA (Maximized)
+   ============================================ */
+
+.messages {
+    flex: 1 1 auto; /* Maximum space for messages */
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 12px 14px; /* Match model dropdown horizontal padding */
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Reduced gap */
+    background: transparent;
+}
+
+/* Scrollbar Styling */
+.messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.messages::-webkit-scrollbar-track {
+    background: rgba(226, 232, 240, 0.5);
+    border-radius: 3px;
+}
+
+.messages::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.6);
+    border-radius: 3px;
+}
+
+.messages::-webkit-scrollbar-thumb:hover {
+    background: rgba(79, 70, 229, 0.6);
+}
+
+/* Message Bubbles (Compact) */
+.message {
+    padding: 12px 8px; /* Match dropdown padding: 5px + 1px border + 2px adjustment = 8px */
+    border-radius: 14px;
+    width: calc(100% - 20px); /* Reduce width to add right margin */
+    margin: 0 10px 0 0; /* Add right margin to move away from border */
+    word-wrap: break-word;
+    background: rgba(255, 255, 255, 0.85);
+    font-size: 0.95rem; /* Slightly smaller text */
+    border: 1px solid rgba(255, 255, 255, 0.65); /* Add transparent border to match dropdown structure */
+    box-shadow:
+      0 18px 28px rgba(15, 23, 42, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    color: var(--color-text);
+}
+
+.message.user-message {
+    background: #ffffff;
+    color: var(--color-text);
+    border-color: rgba(79, 70, 229, 0.18);
+}
+
+.message.assistant-message {
+    background: #ffffff;
+    color: var(--color-text);
+    border-color: rgba(20, 184, 166, 0.18);
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 0.8rem; /* Smaller */
+    color: var(--color-muted);
+}
+
+.role {
+    font-weight: 600;
+}
+
+.timestamp {
+    opacity: 0.7;
+    font-size: 0.75rem; /* Even smaller */
+}
+
+.message-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.copy-message-button {
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--color-primary-dark);
+    border: 1px solid rgba(79, 70, 229, 0.25);
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 10px 18px rgba(79, 70, 229, 0.18);
+    margin-left: 8px; /* Add space from the timestamp */
+    margin-right: 8px; /* Add space from the right border */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.copy-message-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 24px rgba(79, 70, 229, 0.22);
+}
+
+.copy-message-button:focus-visible {
+    outline: 2px solid rgba(79, 70, 229, 0.35);
+    outline-offset: 1px;
+}
+
+/* ============================================
+   CONTENT FORMATTING
+   ============================================ */
+
+/* Rich Text */
+.content {
+    line-height: 1.6;
+    color: inherit;
+    white-space: pre-wrap; /* Preserve whitespace and line breaks */
+    /* Revert to natural flow to avoid inner scroll boxes */
+    overflow: visible;
+    padding: 0;
+    border: none;
+    background: transparent;
+    box-sizing: border-box;
+    width: 100%;
+    word-wrap: break-word;
+}
+
+/* Streaming content - plain text shown during streaming to avoid markdown re-parsing */
+.streaming-content {
+    line-height: 1.6;
+    color: inherit;
+    white-space: pre-wrap;
+    overflow: visible;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    box-sizing: border-box;
+    width: 100%;
+    word-wrap: break-word;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+/* Simplify user message content (no multi-column overrides or forced blocks) */
+.user-message .content { text-align: left; }
+
+/* Keep the user message content simple; avoid forcing pseudo-elements or
+   every descendant into block layout (that caused large flashing boxes).
+   Only relax column settings on the container itself above. */
+.user-message .content * {
+    columns: unset !important;
+    column-count: unset !important;
+    column-width: unset !important;
+}
+
+.user-message .user-plain-text {
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: inherit;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Force inline elements to stay inline in user messages */
+.user-message .content strong,
+.user-message .content em,
+.user-message .content b,
+.user-message .content i,
+.user-message .content code,
+.user-message .content span,
+.user-message .content a {
+    display: inline !important;
+    width: auto !important;
+}
+
+/* Inherit color for top-level content elements but don't override
+   nested token colors inside code blocks */
+.content > * {
+    color: inherit;
+}
+
+/* Ensure proper code formatting in assistant messages - comprehensive override */
+.assistant-message .content pre,
+.assistant-message .content .code-content,
+.assistant-message .content div[class*="language-"],
+.assistant-message .content div[data-language],
+.assistant-message .content .highlight,
+.assistant-message .content .hljs {
+    white-space: pre !important;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+    overflow-x: auto !important;
+    display: block !important;
+    background: #f8f9fa !important;
+    padding: 10px !important;
+    border-radius: 4px !important;
+    border: 1px solid #e9ecef !important;
+    margin: 8px 0 !important;
+    line-height: 1.4 !important;
+    font-size: 0.9rem !important;
+    word-wrap: normal !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    text-align: left !important;
+    columns: unset !important;
+    column-count: unset !important;
+    float: none !important;
+    clear: both !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.assistant-message .content code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+    font-size: 0.9em !important;
+    display: inline !important;
+    background: #f1f3f4 !important;
+    padding: 2px 4px !important;
+    border-radius: 3px !important;
+}
+
+/* Handle all possible code block containers */
+.assistant-message .content .code-block,
+.assistant-message .content .code-container,
+.assistant-message .content .source-code,
+.assistant-message .content .prism-code,
+.assistant-message .content .codehilite {
+    display: flex !important;
+    flex-direction: column !important;
+    border: 1px solid #e1e5e9 !important;
+    border-radius: 6px !important;
+    margin: 8px 0 !important;
+    overflow: hidden !important;
+    background: #f8f9fa !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.assistant-message .content .code-header,
+.assistant-message .content .code-toolbar {
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    padding: 6px 10px !important;
+    background: #e9ecef !important;
+    border-bottom: 1px solid #dee2e6 !important;
+    flex-shrink: 0 !important;
+}
+
+/* Force all children in assistant code blocks to be properly formatted */
+.assistant-message .content pre *,
+.assistant-message .content .code-content *,
+.assistant-message .content .code-block * {
+    font-family: inherit !important;
+    white-space: inherit !important;
+    display: inline !important;
+    float: none !important;
+    columns: unset !important;
+    column-count: unset !important;
+}
+
+.content p {
+    margin: 0.5rem 0;
+}
+
+.content h1,
+.content h2,
+.content h3,
+.content h4,
+.content h5,
+.content h6 {
+    margin: 0.8rem 0 0.4rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.content h1 {
+    font-size: 1.4rem;
+}
+
+.content h2 {
+    font-size: 1.2rem;
+}
+
+.content h3 {
+    font-size: 1.05rem;
+}
+
+.content ul,
+.content ol {
+    margin: 0.4rem 0 0.6rem;
+    padding-left: 1.2rem;
+}
+
+.content li {
+    margin: 0.2rem 0;
+}
+
+.content blockquote {
+    border-left: 3px solid #cbd5e1;
+    padding: 0.4rem 0.6rem;
+    background: #f8fafc;
+    border-radius: 5px;
+    margin: 0.6rem 0;
+}
+
+.content a {
+    color: #2563eb;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+}
+
+.content table {
+    border-collapse: collapse;
+    margin: 0.6rem 0;
+}
+
+.content th,
+.content td {
+    border: 1px solid #e5e7eb;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.9rem;
+}
+
+/* Enhanced markdown table styles */
+.markdown-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.markdown-table thead {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.markdown-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    text-align: left;
+    padding: 0.75rem;
+    border: 1px solid #dee2e6;
+    color: #495057;
+}
+
+.markdown-table td {
+    padding: 0.75rem;
+    border: 1px solid #dee2e6;
+    vertical-align: top;
+}
+
+.markdown-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.markdown-table tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+/* ============================================
+   CODE BLOCKS (Compact)
+   ============================================ */
+
+.code-block {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e1e5e9;
+    border-radius: 6px;
+    margin: 8px 0;
+    overflow: auto; /* allow scrolling within code block */
+    background: #f8f9fa;
+    max-height: 60vh; /* more room; avoids big blank clipping */
+}
+
+.code-header {
+    flex: 0 0 auto;
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 6px 10px; /* Reduced padding */
+    background: #e9ecef;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.language-label {
+    font-size: 0.75rem; /* Smaller */
+    font-weight: 600;
+    color: #495057;
+    text-transform: uppercase;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+.code-content {
+    flex: 1 1 auto;
+    padding: 10px;
+    margin: 0;
+    overflow: auto;
+    background: #f8f9fa;
+    color: #111827;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+    white-space: pre;
+    line-height: 1.5;
+    font-size: 0.9rem; /* Slightly smaller */
+}
+
+.inline-code {
+    background: #f1f3f4;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+    color: #111827;
+    font-size: 0.9em;
+}
+
+/* Copy Buttons */
+/* Code copy buttons inherit from message copy button styling */
+.content .copy-button,
+.content .copy-btn {
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--color-primary-dark);
+    border: 1px solid rgba(79, 70, 229, 0.25);
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 10px 18px rgba(79, 70, 229, 0.18);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.content .copy-button:hover,
+.content .copy-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 24px rgba(79, 70, 229, 0.22);
+}
+
+.content .copy-button:focus-visible,
+.content .copy-btn:focus-visible {
+    outline: 2px solid rgba(79, 70, 229, 0.35);
+    outline-offset: 1px;
+}
+
+/* Math Formatting */
+.math-inline {
+    background: #f0f4f8;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', Consolas, monospace;
+    font-size: 0.95em;
+    color: #1a365d;
+    white-space: nowrap;
+}
+
+.math-display {
+    display: block;
+    margin: 10px 0;
+    padding: 12px;
+    background: #f0f4f8;
+    border-left: 3px solid #4299e1;
+    border-radius: 4px;
+    font-family: 'Courier New', Consolas, monospace;
+    color: #1a365d;
+    overflow-x: auto;
+}
+
+.math-inline sup,
+.math-inline sub,
+.math-display sup,
+.math-display sub {
+    font-size: 0.75em;
+    line-height: 0;
+}
+
+.math-inline sup {
+    vertical-align: super;
+}
+
+.math-inline sub {
+    vertical-align: sub;
+}
+
+/* ============================================
+   INPUT AREA (Compact)
+   ============================================ */
+
+.input-container {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Reduced gap */
+    max-width: var(--page-max);
+    width: 100%;
+    margin: 8px auto 12px; /* Reduced margins */
+    padding: 0 15px;
+    justify-content: center;
+}
+
+.input-container textarea {
+    flex: 1;
+    max-width: 900px; /* Increased from 800px */
+    padding: 8px 12px; /* Reduced padding */
+    border: 1.5px solid rgba(148, 163, 184, 0.4); /* Thinner border */
+    border-radius: 14px;
+    font-size: 13px;
+    resize: none; /* Disabled resize to keep it compact */
+    min-height: 40px; /* Reduced from 60px */
+    max-height: 40px; /* Fixed height */
+    font-family: inherit;
+    background: rgba(255, 255, 255, 0.85);
+    color: var(--color-text);
+    line-height: 1.4;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.input-container textarea:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.12);
+    outline: none;
+}
+
+.input-container button {
+    padding: 12px 20px; /* Reduced padding */
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    color: #0f172a;
+    border: 1px solid rgba(59, 130, 246, 0.35);
+    border-radius: 14px;
+    font-size: 14px; /* Smaller font */
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 18px 32px rgba(96, 165, 250, 0.3);
+    min-width: 60px; /* Reduced from 70px */
+    height: 45px; /* Reduced from 60px */
+    flex-shrink: 0;
+}
+
+.input-container button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 24px 38px rgba(96, 165, 250, 0.34);
+}
+
+/* Button Group - No longer needed, kept for backwards compatibility */
+
+/* Send Button (Primary) - Back to original size */
+.send-button {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    color: #0f172a;
+    border: 1px solid rgba(59, 130, 246, 0.35);
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 18px 32px rgba(96, 165, 250, 0.3);
+    min-width: 60px;
+    height: 45px;
+    flex-shrink: 0;
+}
+
+.send-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 24px 38px rgba(96, 165, 250, 0.34);
+}
+
+.send-button:disabled {
+    background: rgba(147, 197, 253, 0.7);
+    border-color: rgba(147, 197, 253, 0.5);
+    color: rgba(15, 23, 42, 0.5);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* New Chat Button - Now in header, these styles no longer needed */
+
+/* ============================================
+   FOOTER (Compact)
+   ============================================ */
+
+.security-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 4px; /* Reduced */
+    padding: 8px 16px; /* Reduced padding */
+    background: rgba(79, 70, 229, 0.12);
+    border-radius: 16px;
+    border: 1px solid var(--color-border);
+    max-width: 600px; /* Reduced from 800px */
+    margin-left: auto;
+    margin-right: auto;
+    /* Reduce heavy shadow/blur to prevent GPU artifacts and flashing */
+    box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08);
+    /* no backdrop blur */
+}
+
+.security-note p {
+    margin: 0;
+    font-size: 0.85rem; /* Smaller text */
+    color: var(--color-primary-dark);
+    font-family: inherit;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet and smaller laptops */
+@media (max-width: 900px) {
+    :root {
+        --page-max: 100%;
+    }
+
+    .main-content {
+        padding: 10px;
+    }
+
+    .chat-interface {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 10px;
+    }
+
+    .main-title {
+        font-size: 1.75rem;
+    }
+
+    .tagline {
+        font-size: 0.85rem;
+    }
+}
+
+/* Mobile devices */
+@media (max-width: 600px) {
+    .main-content {
+        padding: 8px;
+        height: 100vh;
+        overflow-y: auto; /* Allow main content to scroll */
+    }
+
+    .chat-interface {
+        /* Switch from grid to flexbox for mobile */
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        flex: none; /* Don't stretch to fill */
+    }
+
+    .chat-box {
+        /* Fixed height for each chat box on mobile */
+        height: 300px;
+        min-height: 300px;
+        flex: 0 0 auto;
+    }
+
+    .chat-controls {
+        flex-direction: column;
+        gap: 8px;
+        padding: 6px 10px;
+        margin-bottom: 12px;
+    }
+    
+    .new-chat-header-button {
+        padding: 8px 16px;
+        font-size: 12px;
+        margin-right: 0;
+        margin-bottom: 8px;
+        align-self: center;
+    }
+    
+    .chat-toggle-buttons {
+        flex-direction: column;
+        width: 100%;
+        gap: 6px;
+    }
+
+    .chat-control-button {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .input-container {
+        gap: 8px;
+        padding: 12px 10px;
+        margin: 12px auto;
+        flex: 0 0 auto; /* Don't stretch */
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .input-container textarea {
+        max-width: 100%;
+        min-height: 44px;
+        max-height: 44px;
+        font-size: 14px;
+    }
+
+    .send-button, .input-container button {
+        height: 44px;
+        padding: 8px 12px;
+        font-size: 13px;
+        min-width: 70px;
+    }
+
+    .chat-box .close-button {
+        width: 26px;
+        height: 26px;
+        font-size: 14px;
+    }
+
+    .chat-header {
+        padding: 10px 14px;
+    }
+
+    .chat-title {
+        font-size: 0.95rem;
+    }
+
+    .security-note {
+        padding: 8px 12px;
+        margin: 8px auto 16px;
+        flex: 0 0 auto;
+    }
+
+    .security-note p {
+        font-size: 0.8rem;
+    }
+
+    /* Ensure messages area is scrollable within each chat box */
+    .messages {
+        padding: 8px;
+        gap: 8px;
+    }
+
+    .message {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .message-header {
+        font-size: 0.75rem;
+    }
+
+    .timestamp {
+        font-size: 0.7rem;
+    }
+}
+
+/* ============================================
+   LIBRECHAT-STYLE WHITESPACE HANDLING
+   ============================================ */
+
+/* Critical LibreChat pattern for proper code formatting */
+.hljs {
+    white-space: pre !important;
+}
+
+/* Language-specific code blocks with proper whitespace */
+.code-content code.hljs[class*="language-"] {
+    white-space: pre !important;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+    overflow-x: auto !important;
+    display: block !important;
+}
+
+/* Non-code content should wrap */
+.content p,
+.content div:not(.code-block):not(.code-content) {
+    white-space: pre-wrap !important;
+}
+
+/* Ensure copy button inside <pre> positions correctly */
+.content pre {
+    position: relative;
+}
+
+/* Ensure highlight.js classes work properly */
+.hljs-comment,
+.hljs-quote {
+    color: #6a737d;
+    font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-type {
+    color: #d73a49;
+}
+
+.hljs-string,
+.hljs-attr {
+    color: #032f62;
+}
+
+.hljs-number,
+.hljs-literal {
+    color: #005cc5;
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+    color: #e36209;
+}
+
+/* Code copy button positioning - inherit styling from .content .copy-button */
+.code-header .copy-button {
+    position: absolute !important;
+    top: 6px !important;
+    right: 8px !important;
+    z-index: 1 !important;
+}
+
+/* Fallback styling for dynamically injected copy button */
+.content pre .code-copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}
+
+/* Disable only code-specific animations */
+.code-block,
+.code-content,
+.hljs,
+.code-copy-btn {
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Styling for incomplete code blocks during streaming */
+.incomplete-code {
+    background: #f8f9fa;
+    border: 1px dashed #dee2e6;
+    border-radius: 4px;
+    padding: 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.9em;
+    color: #6c757d;
+    white-space: pre-wrap;
+    margin: 8px 0;
+}
+
+/* Removed duplicate .streaming-content - kept lightweight version at line 433 */
+
+/* ============================================
+   REDUCED EFFECTS MODE (Chromium workarounds)
+   ============================================ */
+
+/* Turn off GPU-intensive filters and heavy shadows app-wide when
+   the UA is Chromium (class is toggled in AppShellComponent) */
+html.reduced-effects *,
+html.reduced-effects *::before,
+html.reduced-effects *::after {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    filter: none !important;
+}
+
+html.reduced-effects .chat-box,
+html.reduced-effects .history-sidebar,
+html.reduced-effects .security-note,
+html.reduced-effects .app-header,
+html.reduced-effects .message,
+html.reduced-effects .code-block,
+html.reduced-effects .usage-indicator {
+    box-shadow: none !important;
+}
+
+/* Neutralize large gradient backgrounds on Chromium */
+html.reduced-effects .free-chat-container,
+html.reduced-effects .main-content {
+    background: #f8fafc !important;
+}
+
+/* Sidebar buttons and thread items (history) */
+html.reduced-effects .history-sidebar .close-button,
+html.reduced-effects .history-sidebar .thread-item,
+html.reduced-effects .history-sidebar .thread-actions,
+html.reduced-effects .history-sidebar .load-more {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+}
+
+/* Keep message surfaces opaque to reduce overdraw */
+html.reduced-effects .message.user-message,
+html.reduced-effects .message.assistant-message {
+    background: #ffffff !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+}

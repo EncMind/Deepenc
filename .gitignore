@@ -1,0 +1,51 @@
+# macOS
+.DS_Store
+
+# IDE / editor
+.idea/
+.vscode/
+.claude/
+
+# Node/Angular
+node_modules/
+.angular/
+dist/
+coverage/
+
+# Env
+.env
+.env.*
+backend/firebase-service-account.json
+
+backend/cmd/server/deepenc-server
+backend/cmd/server/server
+backend/deepenc-server
+
+# LibreChat reference directory
+LibreChat/
+
+BetterChatGPT/
+big-agi/
+bolt.new/
+instructor/
+
+# --- Go build artifacts ---
+# Binaries (go build / make outputs)
+*.exe
+*.dll
+*.so
+*.dylib
+bin/
+build/
+dist/
+
+# Test/coverage outputs
+*.test
+*.out
+*.prof
+*.pprof
+
+# keep Go module/workspace files (do NOT ignore)
+!go.mod
+!go.sum
+!go.work

@@ -1,0 +1,249 @@
+<!-- Chat History Sidebar -->
+<app-chat-history
+  (threadSelected)="onThreadSelected($event)"
+  (threadDeleted)="onThreadDeleted($event)"
+  (historyClosed)="onHistoryClosed()"
+  [style.display]="showHistory() ? 'block' : 'none'">
+</app-chat-history>
+
+<div class="main-content" [class.with-history]="showHistory()">
+    <!-- Status Display -->
+    <div class="status" *ngIf="status()">{{ status() }}</div>
+
+    <!-- Chat Controls -->
+    <div class="chat-controls" *ngIf="!leftChatOpen() || !centerChatOpen() || !rightChatOpen()">
+        <button class="chat-control-button" (click)="expandAllChats()"
+                *ngIf="!leftChatOpen() && !centerChatOpen() && !rightChatOpen()">Open All Chats</button>
+        <button class="chat-control-button" (click)="toggleLeftChat()" *ngIf="!leftChatOpen()">Open ChatGPT</button>
+        <button class="chat-control-button" (click)="toggleCenterChat()" *ngIf="!centerChatOpen()">Open Claude</button>
+        <button class="chat-control-button" (click)="toggleRightChat()" *ngIf="!rightChatOpen()">Open Gemini</button>
+    </div>
+
+    <!-- Chat Interface -->
+    <div class="chat-interface"
+         [class.single-chat]="(leftChatOpen() && !centerChatOpen() && !rightChatOpen()) || (!leftChatOpen() && centerChatOpen() && !rightChatOpen()) || (!leftChatOpen() && !centerChatOpen() && rightChatOpen())"
+         [class.dual-chat]="(leftChatOpen() && centerChatOpen() && !rightChatOpen()) || (leftChatOpen() && !centerChatOpen() && rightChatOpen()) || (!leftChatOpen() && centerChatOpen() && rightChatOpen())">
+
+        <!-- Left Chat (ChatGPT) -->
+        <div class="chat-box left" *ngIf="leftChatOpen()">
+            <!-- Real top-right close -->
+            <button class="close-button" (click)="toggleLeftChat()" aria-label="Close ChatGPT">×</button>
+
+            <div class="chat-header">
+                <div class="chat-title-container">
+                    <img src="assets/chatgpt-logo.webp" alt="ChatGPT" class="chat-logo">
+                    <span class="chat-title">ChatGPT</span>
+                </div>
+            </div>
+
+            <!-- Model selector under the title -->
+            <div class="chat-model-row">
+                <label class="sr-only" for="leftModel">ChatGPT model</label>
+                <select id="leftModel"
+                        class="chat-model-select"
+                        aria-label="Select ChatGPT model"
+                        [value]="leftModel()"
+                        (change)="onLeftModelChange($event)">
+                    <option *ngFor="let model of openaiModels()"
+                            [value]="model"
+                            [selected]="model === leftModel()">
+                        {{ getModelDisplayName(model) }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="messages" id="leftMessages" aria-live="polite">
+                <div *ngFor="let message of leftMessages(); let i = index" class="message"
+                     [class.user-message]="message.role === 'user'"
+                     [class.assistant-message]="message.role === 'assistant'">
+                    <div class="message-header">
+                        <span class="role">
+                            <ng-container *ngIf="message.role === 'user'">👤 You</ng-container>
+                            <ng-container *ngIf="message.role === 'assistant'">
+                                <img src="assets/chatgpt-logo.webp" alt="ChatGPT" class="message-logo">
+                                ChatGPT
+                            </ng-container>
+                        </span>
+                        <div class="message-actions">
+                            <span class="timestamp">{{ message.timestamp }}</span>
+                            <button class="copy-message-button"
+                                    (click)="copyMessage(message.content, $event)"
+                                    title="Copy message">
+                                📋 Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div class="content">
+                      <ng-container *ngIf="message.role === 'assistant'; else leftUserPlain">
+                        <ng-container *ngIf="!message.isStreaming; else leftRawText">
+                          <markdown [data]="message.formattedContent || message.content"
+                                   [options]="markdownOptions"
+                                   ngPreserveWhitespaces></markdown>
+                        </ng-container>
+                        <ng-template #leftRawText>
+                          <pre class="streaming-content">{{ message.content }}</pre>
+                        </ng-template>
+                      </ng-container>
+                      <ng-template #leftUserPlain>
+                        <div class="user-plain-text" [innerText]="message.content"></div>
+                      </ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center Chat (ClaudeAI) -->
+        <div class="chat-box center" *ngIf="centerChatOpen()">
+            <button class="close-button" (click)="toggleCenterChat()" aria-label="Close Claude">×</button>
+
+            <div class="chat-header">
+                <div class="chat-title-container">
+                    <img src="assets/claude-logo.png" alt="Claude" class="chat-logo">
+                    <span class="chat-title">Claude</span>
+                </div>
+            </div>
+
+            <div class="chat-model-row">
+                <label class="sr-only" for="centerModel">Claude model</label>
+                <select id="centerModel"
+                        class="chat-model-select"
+                        aria-label="Select Claude model"
+                        [value]="centerModel()"
+                        (change)="onCenterModelChange($event)">
+                    <option *ngFor="let model of anthropicModels()"
+                            [value]="model"
+                            [selected]="model === centerModel()">
+                        {{ getModelDisplayName(model) }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="messages" id="centerMessages" aria-live="polite">
+                <div *ngFor="let message of centerMessages(); let i = index" class="message"
+                     [class.user-message]="message.role === 'user'"
+                     [class.assistant-message]="message.role === 'assistant'">
+                    <div class="message-header">
+                        <span class="role">
+                            <ng-container *ngIf="message.role === 'user'">👤 You</ng-container>
+                            <ng-container *ngIf="message.role === 'assistant'">
+                                <img src="assets/claude-logo.png" alt="Claude" class="message-logo">
+                                Claude
+                            </ng-container>
+                        </span>
+                        <div class="message-actions">
+                            <span class="timestamp">{{ message.timestamp }}</span>
+                            <button class="copy-message-button"
+                                    (click)="copyMessage(message.content, $event)"
+                                    title="Copy message">
+                                📋 Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div class="content">
+                      <ng-container *ngIf="message.role === 'assistant'; else centerUserPlain">
+                        <ng-container *ngIf="!message.isStreaming; else centerRawText">
+                          <markdown [data]="message.formattedContent || message.content"
+                                   [options]="markdownOptions"
+                                   ngPreserveWhitespaces></markdown>
+                        </ng-container>
+                        <ng-template #centerRawText>
+                          <pre class="streaming-content">{{ message.content }}</pre>
+                        </ng-template>
+                      </ng-container>
+                      <ng-template #centerUserPlain>
+                        <div class="user-plain-text" [innerText]="message.content"></div>
+                      </ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Chat (Gemini) -->
+        <div class="chat-box right" *ngIf="rightChatOpen()">
+            <button class="close-button" (click)="toggleRightChat()" aria-label="Close Gemini">×</button>
+
+            <div class="chat-header">
+                <div class="chat-title-container">
+                    <img src="assets/gemini-logo.jpeg" alt="Gemini" class="chat-logo">
+                    <span class="chat-title">Gemini</span>
+                </div>
+            </div>
+
+            <div class="chat-model-row">
+                <label class="sr-only" for="rightModel">Gemini model</label>
+                <select id="rightModel"
+                        class="chat-model-select"
+                        aria-label="Select Gemini model"
+                        [value]="rightModel()"
+                        (change)="onRightModelChange($event)">
+                    <option *ngFor="let model of geminiModels()"
+                            [value]="model"
+                            [selected]="model === rightModel()">
+                        {{ getModelDisplayName(model) }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="messages" id="rightMessages" aria-live="polite">
+                <div *ngFor="let message of rightMessages(); let i = index" class="message"
+                     [class.user-message]="message.role === 'user'"
+                     [class.assistant-message]="message.role === 'assistant'">
+                    <div class="message-header">
+                        <span class="role">
+                            <ng-container *ngIf="message.role === 'user'">👤 You</ng-container>
+                            <ng-container *ngIf="message.role === 'assistant'">
+                                <img src="assets/gemini-logo.jpeg" alt="Gemini" class="message-logo">
+                                Gemini
+                            </ng-container>
+                        </span>
+                        <div class="message-actions">
+                            <span class="timestamp">{{ message.timestamp }}</span>
+                            <button class="copy-message-button"
+                                    (click)="copyMessage(message.content, $event)"
+                                    title="Copy message">
+                                📋 Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div class="content">
+                      <ng-container *ngIf="message.role === 'assistant'; else rightUserPlain">
+                        <ng-container *ngIf="!message.isStreaming; else rightRawText">
+                          <markdown [data]="message.formattedContent || message.content"
+                                   [options]="markdownOptions"
+                                   ngPreserveWhitespaces></markdown>
+                        </ng-container>
+                        <ng-template #rightRawText>
+                          <pre class="streaming-content">{{ message.content }}</pre>
+                        </ng-template>
+                      </ng-container>
+                      <ng-template #rightUserPlain>
+                        <div class="user-plain-text" [innerText]="message.content"></div>
+                      </ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Input Area -->
+    <div class="input-container">
+    <textarea
+            placeholder="Type your message..."
+            [value]="userInput()"
+            (input)="onUserInputChange($event)"
+            (keydown.enter)="onKeyDown($event)"
+            [disabled]="sendLock.locked()"
+    ></textarea>
+        <button class="send-button"
+                (click)="sendMessage()"
+                [disabled]="sendLock.locked() || !userInput().trim()">
+            <span *ngIf="!sendLock.locked()">Send</span>
+            <span *ngIf="sendLock.locked()">Sending...</span>
+        </button>
+    </div>
+
+    <!-- Security Note -->
+    <div class="security-note">
+        <p>🔒 Your conversations are end-to-end encrypted and protected by confidential computing</p>
+    </div>
+</div>

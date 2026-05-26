@@ -1,0 +1,253 @@
+/* global styles (empty is fine) */
+/* global styles */
+html,body { height:100%; margin:0; }
+
+/* Light theme code block styling with syntax highlighting */
+markdown pre,
+.markdown pre {
+  background: #f8f9fa !important;
+  border: 1px solid #dee2e6 !important;
+  border-radius: 0.375rem !important;
+  margin: 1rem 0 !important;
+  position: relative !important;
+}
+
+markdown pre code,
+.markdown pre code {
+  background: transparent !important;
+  color: #212529 !important;
+  padding: 1rem !important;
+  display: block !important;
+  overflow-x: auto !important;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace !important;
+  white-space: pre !important;
+}
+
+/* Inline code styling */
+markdown code:not(pre code),
+.markdown code:not(pre code) {
+  background: #f3f4f6 !important;
+  color: #374151 !important;
+  padding: 0.125rem 0.25rem !important;
+  border-radius: 0.25rem !important;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace !important;
+}
+
+/* Generic fallback for all code blocks */
+pre {
+  background: #f8f9fa !important;
+  border: 1px solid #dee2e6 !important;
+  border-radius: 0.375rem !important;
+  margin: 1rem 0 !important;
+}
+
+pre code {
+  background: transparent !important;
+  color: #212529 !important;
+  padding: 1rem !important;
+  display: block !important;
+  overflow-x: auto !important;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace !important;
+}
+
+/* Ensure pre elements can contain positioned elements */
+markdown pre,
+.markdown pre,
+pre {
+  position: relative !important;
+}
+
+/* Code block copy button - matches chat message copy button styling */
+pre .code-copy-btn {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  background: #f1f5f9 !important;
+  color: #1f2937 !important;
+  border: 1px solid #cbd5e1 !important;
+  padding: 3px 8px !important;
+  border-radius: 5px !important;
+  font-size: 0.7rem !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04) !important;
+  z-index: 100 !important;
+  font-family: inherit !important;
+  user-select: none !important;
+  transition: none !important;
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+}
+
+pre .code-copy-btn:hover {
+  background: #e2e8f0 !important;
+  border-color: #94a3b8 !important;
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+/* Global CSS to force black text (but exclude code blocks) */
+*:not(pre):not(pre *) {
+  color: #212529 !important;
+}
+
+body, html {
+  color: #212529 !important;
+}
+
+/* Force black text in all Angular components (but exclude code blocks) */
+app-root, app-root *:not(pre):not(pre *) {
+  color: #212529 !important;
+}
+
+/* Force black text in messages (but exclude code blocks) */
+.message, .message *:not(pre):not(pre *) {
+  color: #212529 !important;
+}
+
+.content, .content *:not(pre):not(pre *):not(code) {
+  color: #212529 !important;
+}
+
+/* Most specific overrides - but exclude code elements */
+.messages .message .content:not(pre):not(code),
+.messages .message .content *:not(pre):not(pre *):not(code):not(code *),
+.messages .message .content p,
+.messages .message .content span:not(code):not(code *),
+.messages .message .content div:not(pre):not(code) {
+  color: #212529 !important;
+  color: black !important;
+}
+
+/* Base code block text color */
+pre code {
+  color: #24292f !important;
+}
+
+/* Ensure pre elements have light background with border */
+pre,
+markdown pre,
+.markdown pre {
+  background: #f6f8fa !important;
+  border: 1px solid #d0d7de !important;
+}
+
+/* ========================================
+   Syntax Highlighting Colors (VS Code Light+ inspired)
+   ======================================== */
+
+/* Keywords: def, return, if, for, while, class, import, from, etc. */
+pre code .hljs-keyword,
+pre code .hljs-selector-tag,
+pre code .hljs-built_in {
+  color: #cf222e !important;
+  font-weight: 600 !important;
+}
+
+/* Strings: "text", 'text', """docstring""" */
+pre code .hljs-string,
+pre code .hljs-doctag {
+  color: #0a3069 !important;
+}
+
+/* Comments and docstrings */
+pre code .hljs-comment,
+pre code .hljs-quote {
+  color: #6e7781 !important;
+  font-style: italic !important;
+}
+
+/* Function and method names */
+pre code .hljs-function .hljs-title,
+pre code .hljs-title.function_,
+pre code .hljs-title.class_ {
+  color: #8250df !important;
+  font-weight: 600 !important;
+}
+
+/* Numbers: 123, 4.5, 0x1a */
+pre code .hljs-number,
+pre code .hljs-literal {
+  color: #0550ae !important;
+}
+
+/* Operators: =, +, -, ->, etc. */
+pre code .hljs-operator,
+pre code .hljs-punctuation {
+  color: #cf222e !important;
+}
+
+/* Built-in types and classes: list, str, int, DataFrame, etc. */
+pre code .hljs-type,
+pre code .hljs-class,
+pre code .hljs-built_in {
+  color: #953800 !important;
+}
+
+/* Variables and parameters */
+pre code .hljs-variable,
+pre code .hljs-params,
+pre code .hljs-attr {
+  color: #24292f !important;
+}
+
+/* Special identifiers: self, cls, None, True, False */
+pre code .hljs-variable.language_,
+pre code .hljs-literal {
+  color: #0550ae !important;
+  font-weight: 600 !important;
+}
+
+/* Decorators: @property, @staticmethod */
+pre code .hljs-meta,
+pre code .hljs-decorator {
+  color: #953800 !important;
+}
+
+/* Regular expressions */
+pre code .hljs-regexp {
+  color: #116329 !important;
+}
+
+/* Tags in HTML/XML */
+pre code .hljs-tag {
+  color: #116329 !important;
+}
+
+/* Attribute names in HTML */
+pre code .hljs-name,
+pre code .hljs-attribute {
+  color: #8250df !important;
+}
+
+/* Symbols and special characters */
+pre code .hljs-symbol,
+pre code .hljs-bullet,
+pre code .hljs-link {
+  color: #0550ae !important;
+}
+
+/* Section headers in markdown */
+pre code .hljs-section {
+  color: #0550ae !important;
+  font-weight: 700 !important;
+}
+
+/* Additions in diffs */
+pre code .hljs-addition {
+  color: #116329 !important;
+  background-color: #dafbe1 !important;
+}
+
+/* Deletions in diffs */
+pre code .hljs-deletion {
+  color: #82071e !important;
+  background-color: #ffebe9 !important;
+}
+

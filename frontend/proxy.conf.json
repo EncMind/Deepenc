@@ -1,0 +1,13 @@
+{
+  "/api": {
+    "target": "https://www.deepenc.com",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/public": {
+    "target": "https://www.deepenc.com",
+    "secure": true,
+    "changeOrigin": true
+  }
+}
